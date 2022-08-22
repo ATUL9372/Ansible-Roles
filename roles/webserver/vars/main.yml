@@ -1,0 +1,10 @@
+---
+s1_user: xyz
+s2_user: username
+s3_user: ak
+
+
+ssh_pulic_key: "{{ lookup('file', '/.ssh/id_rsa.pub') }}" # Enter your Full Path ssh public key file 
+
+ansible_ssh_user: "{{ lookup('ini', 'ansible_ssh_user section={{ inventory_hostname }}  file=<Full Path Username>.ini') }}"
+ansible_sudo_pass: "{{ lookup('ini', 'ansible_sudo_pass section={{ inventory_hostname }}  file=<Full Path Password file>.ini') }}"
