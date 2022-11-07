@@ -1,0 +1,90 @@
+---
+
+- hosts: server ## /etc/ansible/hosts  file 
+  become: true ## sudo users 
+  vars:   ## create global variable
+
+  ## Local machine  variable
+
+    local_Copy_stc1: /home/hey-nikto/Desktop/github/server-script.sh  # Enter your script full path
+    local_fetch_dest_path: /tmp/output-file/    # Enter your destination file path store all outputs
+     
+  ## Remote machine variable
+
+    remote_dest1: /tmp      # Enter remote server file path
+    remote_path: /tmp/server-script.sh  # Run script path  
+    remote_username: nikto      # Enter remote server username
+    remote_file_permission: 775 # Enter file permission ex:- chmod 775 <file-name>
+    remote_Fetch_stc1: /tmp/script-output.txt      # on remote server which file copy  enter full path
+    remote_server_run_command: sh /tmp/server-script.sh > /tmp/script-output.txt  # Enter your command which commands run in remote server
+
+  tasks:
+
+  - name: "copy script"
+    copy:                   # copy command for local to remote server
+      src: "{{local_Copy_stc1}}"
+      dest: "{{remote_dest1}}"
+
+  - name: "script permission"
+    file:
+      path: "{{remote_path}}"
+      owner: "{{remote_username}}"
+      group: "{{remote_username}}"
+      mode: "{{remote_file_permission}}"
+
+  - name: "shell run"
+    ansible.builtin.shell: '{{remote_server_run_command}}'
+
+## copy any file remote server to local machine using fetch command ---------------------------------------
+
+  - name: "remote to local file send"
+    run_once: yes
+    ansible.builtin.fetch:
+      src: "{{remote_Fetch_stc1}}"   ## enter full file path remote server 
+    #  dest: output-file/             ## auto.. create one folder name is output-file on this file path
+      dest: "{{local_fetch_dest_path}}"
+      flat: yes                      ## flat 
+
+## Ends fetch command script ---------------------------------------------------------------
+
+## https://www.middlewareinventory.com/blog/how-to-copy-files-between-remote-servers-ansible-fetch-sync/
+
+## https://docs.ansible.com/ansible/latest/collections/ansible/builtin/fetch_module.html
+
+
+
+#############################################################   without variable playbook  ####################################################################################
+
+#   tasks:
+
+#   - name: "copy script"
+#     copy:                   # copy command for local to remote server
+#       src: /home/hey-nikto/Desktop/github/server-script.sh 
+#       dest: /tmp
+
+#   - name: "script permission"
+#     file:
+#       path: /tmp/server-script.sh
+#       owner: "nikto"
+#       group: "nikto"
+#       mode: "775"
+
+#   - name: "shell run"
+#     ansible.builtin.shell: 'sh /tmp/server-script.sh > /tmp/script-output.txt'
+
+# ## copy any file remote server to local machine using fetch command ---------------------------------------
+
+#   - name: "remote to local file send"
+#     run_once: yes
+#     ansible.builtin.fetch:
+#       src: /tmp/script-output.txt    ## enter full file path remote server 
+#     #  dest: output-file/             ## auto.. create one folder name is output-file on this file path
+#       dest: /tmp/output-file/
+#       flat: yes                      ## flat 
+
+## https://docs.ansible.com/ansible/latest/collections/ansible/builtin/fetch_module.html
+
+
+#######################################################################    END   ##############################################################################################
+
+
