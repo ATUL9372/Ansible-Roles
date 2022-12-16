@@ -1,0 +1,68 @@
+---
+
+- hosts: akk ## /etc/ansible/hosts  file 
+  become: true
+
+  tasks:
+
+## Ubuntu servers
+  - name: "install apache in ubuntu"
+    apt: 
+      name: apache2 
+      state: latest
+    when: ansible_os_family == "Ubuntu"
+
+  - name: "copy script in ubuntu "
+    copy:                   
+      src: ./ubuntu_script.sh
+      dest: /tmp/
+    when: ansible_os_family == "Ubuntu"
+
+  - name: "shell chmod  and run in ubuntu"
+    shell: |
+      chmod +x ubuntu_script.sh
+      
+    when: ansible_os_family == "Ubuntu"
+
+  - name: "remote to local file send in ubuntu"
+    run_once: yes
+    ansible.builtin.fetch:
+      src: /tmp/ubuntu_public_ip.txt  ## enter full file path remote server 
+    #  dest: output-file/             ## auto.. create one folder name is output-file on this file path
+      dest: ./
+      flat: yes  
+    when: ansible_os_family == "Ubuntu"
+
+
+## Centos servers
+  - name: "install httpd in Centos"
+    apt: 
+      name: httpd
+      state: latest
+    when: ansible_os_family == "Centos"
+
+  - name: "copy script in Centos "
+    copy:                   
+      src: ./centos_script.sh
+      dest: /tmp/
+    when: ansible_os_family == "Centos"
+
+  - name: "shell chmod  and run in Centos"
+    shell: |
+      chmod +x centos_script.sh
+      
+    when: ansible_os_family == "Centos"
+
+  - name: "remote to local file send in Centos"
+    run_once: yes
+    ansible.builtin.fetch:
+      src: /tmp/ubuntu_public_ip.txt  ## enter full file path remote server 
+    #  dest: output-file/             ## auto.. create one folder name is output-file on this file path
+      dest: ./
+      flat: yes  
+    when: ansible_os_family == "Centos"
+
+
+
+
+  
