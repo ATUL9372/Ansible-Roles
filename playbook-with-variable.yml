@@ -1,19 +1,20 @@
 ---
 
-- hosts: server ## /etc/ansible/hosts  file 
-  become: true ## sudo users 
+- hosts: all ## /etc/ansible/hosts  file 
+  # become: true ## sudo users 
   vars:   ## create global variable
 
   ## Local machine  variable
 
-    local_Copy_stc1: /home/hey-nikto/Desktop/github/server-script.sh  # Enter your script full path
+    local_Copy_stc1: /home/hey-nikto/Desktop/Ansible run script on remote server/ansible-run-script/server-script.sh  # Enter your script full path
     local_fetch_dest_path: /tmp/output-file/    # Enter your destination file path store all outputs
      
   ## Remote machine variable
 
+
     remote_dest1: /tmp      # Enter remote server file path
     remote_path: /tmp/server-script.sh  # Run script path  
-    remote_username: nikto      # Enter remote server username
+    remote_username: fs      # Enter remote server username
     remote_file_permission: 775 # Enter file permission ex:- chmod 775 <file-name>
     remote_Fetch_stc1: /tmp/script-output.txt      # on remote server which file copy  enter full path
     remote_server_run_command: sh /tmp/server-script.sh > /tmp/script-output.txt  # Enter your command which commands run in remote server
@@ -47,6 +48,13 @@
 
 ## Ends fetch command script ---------------------------------------------------------------
 
+  - name: "Delete script remote server"
+    ansible.builtin.shell: 'rm /tmp/server-script.sh'
+
+  - name: "ouput file on remote server"
+    ansible.builtin.command: 'sudo rm script-output.txt'
+      
+
 ## https://www.middlewareinventory.com/blog/how-to-copy-files-between-remote-servers-ansible-fetch-sync/
 
 ## https://docs.ansible.com/ansible/latest/collections/ansible/builtin/fetch_module.html
@@ -59,7 +67,7 @@
 
 #   - name: "copy script"
 #     copy:                   # copy command for local to remote server
-#       src: /home/hey-nikto/Desktop/github/server-script.sh 
+#       src: /home/hey-nikto/Desktop/ansible-run-script/server-script.sh 
 #       dest: /tmp
 
 #   - name: "script permission"
